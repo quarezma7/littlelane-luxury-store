@@ -15,6 +15,25 @@ export function AppProvider({ children }) {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [settings, setSettings] = useState(STORE_SETTINGS);
 
+  // Global Simulated Email / Notification State
+  const [notifications, setNotifications] = useState([]);
+
+  const addNotification = useCallback((title, message, targetUserId = null, isEmail = true) => {
+    const id = Date.now().toString() + Math.random().toString(36).substr(2, 5);
+    const date = new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    setNotifications(prev => [{ id, title, message, targetUserId, isEmail, date, read: false }, ...prev]);
+  }, []);
+
+  const markNotificationsRead = useCallback((userId = null) => {
+    setNotifications(prev => prev.map(n => {
+      // If admin marking read, mark all read. If user marking read, mark only theirs read.
+      if (!userId || n.targetUserId === userId || n.targetUserId === null) {
+        return { ...n, read: true };
+      }
+      return n;
+    }));
+  }, []);
+
   const addToast = useCallback((message, type = 'success') => {
     const id = ++toastId;
     setToasts(prev => [...prev, { id, message, type }]);
@@ -57,6 +76,7 @@ export function AppProvider({ children }) {
       toasts, addToast, removeToast,
       authModalOpen, setAuthModalOpen,
       settings, updateSettings,
+      notifications, addNotification, markNotificationsRead,
     }}>
       {children}
     </AppContext.Provider>

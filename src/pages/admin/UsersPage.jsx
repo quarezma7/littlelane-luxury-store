@@ -47,7 +47,7 @@ function UserFormModal({ isOpen, onClose, onSave }) {
 
 export default function UsersPage() {
   const { state, dispatch } = useAdmin();
-  const { addToast, currentUser } = useApp();
+  const { addToast, currentUser, addNotification } = useApp();
   const addModal = useModal();
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
@@ -61,11 +61,13 @@ export default function UsersPage() {
   const handleAdd = (user) => {
     dispatch({ type:'ADD_USER', payload: user });
     addToast('User created', 'success');
+    addNotification('Welcome to LittleLane!', `Your account has been successfully created with the role of ${user.role}.`, user.id, true);
   };
 
   const changeRole = (user, role) => {
     dispatch({ type:'UPDATE_USER', payload: {...user, role} });
     addToast(`${user.name}'s role updated to ${role}`, 'success');
+    addNotification('Role Updated', `Your account role has been updated to ${role}.`, user.id, true);
   };
 
   const toggleStatus = (user) => {

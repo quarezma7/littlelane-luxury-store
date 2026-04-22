@@ -96,7 +96,7 @@ function exportCSV(orders) {
 
 export default function OrdersPage() {
   const { state, dispatch } = useStore();
-  const { addToast } = useApp();
+  const { addToast, addNotification } = useApp();
   const detailModal = useModal();
   const [statusFilter, setStatusFilter] = useState('All');
 
@@ -107,6 +107,7 @@ export default function OrdersPage() {
   const handleUpdate = (order) => {
     dispatch({ type:'UPDATE_ORDER', payload: order });
     addToast('Order updated', 'success');
+    addNotification('Order Status Update', `Your order ${order.id} is now ${order.status}.`, order.userId, true);
   };
 
   const counts = ['All', ...STATUSES].reduce((acc, s) => {

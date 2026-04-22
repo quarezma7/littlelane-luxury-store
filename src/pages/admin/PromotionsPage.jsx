@@ -56,7 +56,7 @@ function PromoFormModal({ isOpen, onClose, onSave }) {
 
 export default function PromotionsPage() {
   const { state, dispatch } = useAdmin();
-  const { addToast } = useApp();
+  const { addToast, addNotification } = useApp();
   const addModal = useModal();
 
   const togglePromo = (promo) => {
@@ -72,6 +72,7 @@ export default function PromotionsPage() {
   const handleSave = (promo) => {
     dispatch({ type:'ADD_PROMO', payload: promo });
     addToast(`Promo code "${promo.code}" created`, 'success');
+    addNotification('New Promotion Alert', `A new promo code "${promo.code}" for ${promo.value}% off is now active!`, null, true);
   };
 
   const thStyle = { padding:'10px 14px', textAlign:'left', color:'var(--text-muted)', fontWeight:500, fontSize:'0.72rem', textTransform:'uppercase', letterSpacing:'0.06em', borderBottom:'1px solid var(--border-glass)' };

@@ -144,7 +144,7 @@ function ProductFormModal({ isOpen, onClose, product, onSave }) {
 
 export default function ProductsPage() {
   const { state, dispatch } = useStore();
-  const { addToast } = useApp();
+  const { addToast, addNotification } = useApp();
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('');
   const [selected, setSelected] = useState(new Set());
@@ -162,9 +162,11 @@ export default function ProductsPage() {
     if (exists) {
       dispatch({ type: 'UPDATE_PRODUCT', payload: prod });
       addToast('Product updated', 'success');
+      addNotification('Product Updated', `The product "${prod.name}" has been updated.`, null, true);
     } else {
       dispatch({ type: 'ADD_PRODUCT', payload: prod });
       addToast('Product added', 'success');
+      addNotification('New Product Alert', `A new product "${prod.name}" is now available!`, null, true);
     }
   };
 

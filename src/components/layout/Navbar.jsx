@@ -1,22 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { useStore } from '../../context/StoreContext';
 import { useDebounce } from '../../hooks/useDebounce';
 
 export default function Navbar() {
-  const { currentUser, setAuthModalOpen, logout } = useApp();
+  const { currentUser, setAuthModalOpen, logout, notifications, markNotificationsRead } = useApp();
   const { state, dispatch, cartCount, wishlistCount } = useStore();
   const [scrolled, setScrolled] = useState(false);
   const [search, setSearch] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notifRef = useRef(null);
   const navigate = useNavigate();
   const debouncedSearch = useDebounce(search, 300);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
+    const handleClickOutside = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) setShowNotifications(false);
+    };
     window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -69,6 +78,48 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* Notifications */}
+          {currentUser && (
+            <div ref={notifRef} style={{ position: 'relative' }}>
+              <NavBtn 
+                onClick={() => { setShowNotifications(!showNotifications); markNotificationsRead(currentUser.id); }} 
+                title="Notifications"
+                badge={notifications.filter(n => !n.read && (n.targetUserId === currentUser.id || n.targetUserId === null)).length}
+              >🔔</NavBtn>
+              
+              {showNotifications && (
+                <div style={{
+                  position: 'absolute', top: '120%', right: -40, width: 320, maxHeight: 400, overflowY: 'auto',
+                  background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)',
+                  borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-lg)', zIndex: 100,
+                  display: 'flex', flexDirection: 'column'
+                }}>
+                  <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-glass)', fontWeight: 600, fontSize: '0.875rem' }}>
+                    Your Notifications
+                  </div>
+                  <div style={{ flex: 1, padding: 8 }}>
+                    {notifications.filter(n => n.targetUserId === currentUser.id || n.targetUserId === null).length === 0 ? (
+                      <div style={{ padding: 24, textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>No recent alerts</div>
+                    ) : (
+                      notifications.filter(n => n.targetUserId === currentUser.id || n.targetUserId === null).map(n => (
+                        <div key={n.id} style={{
+                          padding: '12px', background: 'var(--bg-glass)', borderRadius: 'var(--radius-sm)',
+                          marginBottom: 8, fontSize: '0.85rem', borderLeft: `3px solid ${n.isEmail ? 'var(--brand)' : 'var(--info)'}`
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                            <strong style={{ color: 'var(--text-primary)' }}>{n.title}</strong>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{n.date}</span>
+                          </div>
+                          <div style={{ color: 'var(--text-secondary)', lineHeight: 1.4 }}>{n.message}</div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Wishlist */}
           <NavBtn onClick={() => navigate('/wishlist')} title="Wishlist" badge={wishlistCount}>♡</NavBtn>
 
