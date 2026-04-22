@@ -239,10 +239,9 @@ export default function ProductsPage() {
         )}
       </div>
 
-      {/* Table container */}
       <div className="glass-card" style={{ overflow:'hidden' }}>
         {filtered.length === 0 ? (
-          <EmptyState emoji="📦" title="No items found" subtitle="Try another search or category filter" />
+          <EmptyState icon={<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>} title="No items found" subtitle="Try another search or category filter" />
         ) : (
           <div style={{ overflowX:'auto' }}>
             <table style={{ width:'100%', borderCollapse:'collapse', fontSize:'0.875rem', whiteSpace:'nowrap' }}>

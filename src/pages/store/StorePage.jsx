@@ -110,7 +110,9 @@ export default function StorePage() {
                 {Array.from({length: 8}).map((_,i) => <SkeletonCard key={i} />)}
               </div>
             ) : filteredProducts.length === 0 ? (
-              <EmptyState emoji="🔍" title="No products found" subtitle="Try adjusting your filters or search query" />
+              <div style={{ gridColumn: '1 / -1' }}>
+                <EmptyState icon={<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>} title="No products found" subtitle="Try adjusting your filters or search query" />
+              </div>
             ) : (
               <div className="product-grid">
                 {filteredProducts.map(p => <ProductCard key={p.id} product={p} />)}

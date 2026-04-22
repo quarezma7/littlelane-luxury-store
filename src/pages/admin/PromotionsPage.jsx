@@ -89,7 +89,7 @@ export default function PromotionsPage() {
 
       <div style={{ background:'var(--bg-glass)', border:'1px solid var(--border-glass)', borderRadius:'var(--radius-md)', overflow:'auto' }}>
         {state.promos.length === 0 ? (
-          <EmptyState emoji="🏷️" title="No promo codes yet" subtitle="Create your first promotion" />
+          <EmptyState icon={<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>} title="No promo codes yet" subtitle="Create your first promotion" />
         ) : (
           <table style={{ width:'100%', borderCollapse:'collapse', fontSize:'0.875rem' }}>
             <thead>
