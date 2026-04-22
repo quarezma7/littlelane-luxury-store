@@ -4,7 +4,6 @@ import { useStore } from '../../context/StoreContext';
 import ProductCard from '../../features/products/ProductCard';
 import FilterSidebar from '../../features/products/FilterSidebar';
 import SortDropdown from '../../features/products/SortDropdown';
-import { FEATURED_COLLECTIONS } from '../../data/seed';
 import { SkeletonCard } from '../../components/ui/Skeleton';
 import EmptyState from '../../components/ui/EmptyState';
 import Drawer from '../../components/ui/Drawer';
@@ -49,8 +48,6 @@ export default function StorePage() {
     <div>
       {/* Hero */}
       {!searchQuery && <HeroSection />}
-      {/* Featured Collections */}
-      {!searchQuery && <FeaturedCollections />}
 
       {/* Product Grid Section */}
       <div className="page-container" style={{ padding: '40px 24px 60px' }}>
@@ -198,15 +195,6 @@ function HeroSection() {
             onMouseEnter={e => { e.target.style.transform = 'scale(1.04)'; e.target.style.boxShadow = '0 8px 24px rgba(37, 99, 235, 0.35)'; }}
             onMouseLeave={e => { e.target.style.transform = ''; e.target.style.boxShadow = ''; }}
           >Shop Now</a>
-          <a href="#collection" style={{
-            padding: '14px 36px', background: 'transparent', color: 'var(--text-primary)',
-            border: '1px solid var(--border-glass)', borderRadius: 'var(--radius-full)',
-            fontWeight: 500, fontSize: '0.95rem', display: 'inline-block',
-            transition: 'all var(--transition-base)', letterSpacing: '0.04em',
-          }}
-            onMouseEnter={e => { e.target.style.borderColor = 'var(--brand)'; e.target.style.color = 'var(--brand)'; }}
-            onMouseLeave={e => { e.target.style.borderColor = 'var(--border-glass)'; e.target.style.color = 'var(--text-primary)'; }}
-          >Explore Collections</a>
         </div>
 
         {/* Stats */}
@@ -236,69 +224,3 @@ function HeroSection() {
   );
 }
 
-function FeaturedCollections() {
-  const scrollRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === 'left' ? -300 : 300;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  return (
-    <section id="collection" style={{ padding: '60px 0 40px', position: 'relative' }}>
-      <div className="page-container">
-        <div style={{ marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem' }}>Featured Collections</h2>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }} className="desktop-only">Scroll to explore →</span>
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button
-              onClick={() => scroll('left')}
-              style={{
-                width: 36, height: 36, borderRadius: '50%', background: 'var(--bg-glass)',
-                border: '1px solid var(--border-subtle)', color: 'var(--text-primary)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.color = 'var(--brand)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-            >←</button>
-            <button
-              onClick={() => scroll('right')}
-              style={{
-                width: 36, height: 36, borderRadius: '50%', background: 'var(--bg-glass)',
-                border: '1px solid var(--border-subtle)', color: 'var(--text-primary)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.color = 'var(--brand)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-            >→</button>
-          </div>
-        </div>
-        <div ref={scrollRef} style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 12, scrollbarWidth: 'none', scrollBehavior: 'smooth' }}>
-          {FEATURED_COLLECTIONS.map((col, i) => (
-            <div key={col.id} style={{
-              flexShrink: 0, width: 180, background: 'var(--bg-glass)',
-              border: '1px solid var(--border-glass)', borderRadius: 'var(--radius-md)',
-              padding: '24px 20px', textAlign: 'center', cursor: 'pointer',
-              transition: 'all var(--transition-base)', position: 'relative', overflow: 'hidden',
-              animation: `fadeSlideUp 0.4s ${i * 0.08}s ease both`,
-            }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md), 0 0 20px ' + col.color + '30'; e.currentTarget.style.borderColor = col.color + '60'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; e.currentTarget.style.borderColor = 'var(--border-glass)'; }}
-            >
-              <div style={{ fontSize: '2.5rem', marginBottom: 12, display: 'block' }}>{col.emoji}</div>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 600, marginBottom: 4, color: 'var(--text-primary)' }}>{col.title}</div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 8 }}>{col.subtitle}</div>
-              <div style={{ fontSize: '0.72rem', color: col.color, fontWeight: 600, border: `1px solid ${col.color}40`, borderRadius: 'var(--radius-full)', padding: '2px 10px', display: 'inline-block' }}>{col.count} items</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
