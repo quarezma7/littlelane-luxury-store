@@ -20,6 +20,16 @@ export default function AuthModal() {
     const user = adminState.users.find(u =>
       u.email.toLowerCase() === form.email.toLowerCase() && u.password === form.password
     );
+    
+    // Emergency fallback if MongoDB is empty (allows admin to login and seed DB)
+    if (!user && form.email === 'admin@store.com' && form.password === 'admin123') {
+      login({ id: 'u1', name: 'Admin User', email: 'admin@store.com', role: 'admin' });
+      addToast('Emergency Admin Login. Please go to Settings and Reset Database.', 'warning');
+      setForm({ email: '', password: '', name: '' });
+      setLoading(false);
+      return;
+    }
+
     if (!user) { setError('Invalid email or password.'); setLoading(false); return; }
     if (user.status === 'suspended') { setError('This account has been suspended.'); setLoading(false); return; }
 
