@@ -1,0 +1,193 @@
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useApp } from '../../context/AppContext';
+import { useStore } from '../../context/StoreContext';
+import { useDebounce } from '../../hooks/useDebounce';
+
+export default function Navbar() {
+  const { currentUser, setAuthModalOpen, logout } = useApp();
+  const { state, dispatch, cartCount, wishlistCount } = useStore();
+  const [scrolled, setScrolled] = useState(false);
+  const [search, setSearch] = useState('');
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const navigate = useNavigate();
+  const debouncedSearch = useDebounce(search, 300);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (debouncedSearch) {
+      navigate('/?search=' + encodeURIComponent(debouncedSearch));
+    }
+  }, [debouncedSearch, navigate]);
+
+  const initials = currentUser
+    ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : null;
+
+  return (
+    <nav style={{
+      position: 'sticky', top: 0, zIndex: 'var(--z-navbar)',
+      background: scrolled ? 'var(--bg-overlay)' : 'transparent',
+      backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+      borderBottom: `1px solid ${scrolled ? 'var(--border-glass)' : 'transparent'}`,
+      transition: 'all 0.3s ease',
+    }}>
+      <div className="page-container" style={{
+        display: 'flex', alignItems: 'center', gap: 24, height: 68,
+      }}>
+        {/* Logo */}
+        <Link to="/" style={{
+          fontFamily: 'var(--font-display)', fontSize: '1.6rem', fontWeight: 700,
+          background: 'var(--brand-gradient)', WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          letterSpacing: '0.12em', whiteSpace: 'nowrap', flexShrink: 0,
+        }}>LittleLane</Link>
+
+        {/* Search */}
+        <div style={{ flex: 1, maxWidth: 440, position: 'relative' }}>
+          <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.9rem' }}>🔍</span>
+          <input
+            type="text"
+            placeholder="Search for kids, moms, toys..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{
+              width: '100%', background: 'var(--bg-glass)', border: '1px solid var(--border-subtle)',
+              borderRadius: 'var(--radius-full)', padding: '8px 16px 8px 38px',
+              color: 'var(--text-primary)', fontSize: '0.875rem',
+              transition: 'all var(--transition-base)',
+            }}
+            onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px var(--brand-glow)'; }}
+            onBlur={e => { e.target.style.borderColor = 'var(--border-subtle)'; e.target.style.boxShadow = 'none'; }}
+          />
+        </div>
+
+        {/* Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
+          {/* Wishlist */}
+          <NavBtn onClick={() => navigate('/wishlist')} title="Wishlist" badge={wishlistCount}>♡</NavBtn>
+
+          {/* Cart */}
+          <NavBtn onClick={() => dispatch({ type: 'TOGGLE_CART_DRAWER' })} title="Cart" badge={cartCount}>🛒</NavBtn>
+
+          {/* Admin panel */}
+          {currentUser?.role === 'admin' && (
+            <NavBtn onClick={() => navigate('/admin/overview')} title="Admin Panel">⚙️</NavBtn>
+          )}
+
+          {/* Auth */}
+          <div style={{ position: 'relative' }}>
+            {currentUser ? (
+              <button
+                onClick={() => setShowUserMenu(v => !v)}
+                style={{
+                  width: 38, height: 38, borderRadius: 'var(--radius-full)',
+                  background: 'var(--brand-gradient)', color: '#0a0c18',
+                  fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer',
+                  border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'transform var(--transition-fast)',
+                }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.08)'}
+                onMouseLeave={e => e.currentTarget.style.transform = ''}
+              >{initials}</button>
+            ) : (
+              <button
+                onClick={() => setAuthModalOpen(true)}
+                style={{
+                  padding: '8px 18px', background: 'var(--bg-glass)',
+                  border: '1px solid var(--brand-border)', borderRadius: 'var(--radius-full)',
+                  color: 'var(--brand)', fontSize: '0.85rem', fontWeight: 500,
+                  cursor: 'pointer', transition: 'all var(--transition-fast)',
+                  fontFamily: 'var(--font-body)',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'var(--brand-glow)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-glass)'; }}
+              >Sign In</button>
+            )}
+
+            {/* User dropdown */}
+            {showUserMenu && currentUser && (
+              <div style={{
+                position: 'absolute', top: '110%', right: 0,
+                background: 'var(--bg-tertiary)', border: '1px solid var(--border-glass)',
+                borderRadius: 'var(--radius-md)', padding: '8px 0',
+                minWidth: 180, boxShadow: 'var(--shadow-lg)',
+                animation: 'fadeSlideDown 0.2s ease',
+                zIndex: 10,
+              }}>
+                <div style={{ padding: '8px 16px', borderBottom: '1px solid var(--border-subtle)', marginBottom: 4 }}>
+                  <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-primary)' }}>{currentUser.name}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{currentUser.email}</div>
+                </div>
+                {currentUser.role === 'admin' && (
+                  <DropdownItem onClick={() => { navigate('/admin/overview'); setShowUserMenu(false); }}>⚙️ Admin Panel</DropdownItem>
+                )}
+                <DropdownItem onClick={() => navigate('/wishlist')}>♡ Wishlist</DropdownItem>
+                <DropdownItem onClick={() => { logout(); setShowUserMenu(false); }} danger>→ Sign Out</DropdownItem>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Click outside to close */}
+      {showUserMenu && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: -1 }} onClick={() => setShowUserMenu(false)} />
+      )}
+    </nav>
+  );
+}
+
+function NavBtn({ children, onClick, badge, title }) {
+  return (
+    <button
+      title={title}
+      onClick={onClick}
+      style={{
+        position: 'relative', width: 40, height: 40,
+        background: 'var(--bg-glass)', border: '1px solid var(--border-subtle)',
+        borderRadius: 'var(--radius-full)', color: 'var(--text-secondary)',
+        fontSize: '1.1rem', cursor: 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'all var(--transition-fast)',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand-border)'; e.currentTarget.style.color = 'var(--brand)'; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+    >
+      {children}
+      {badge > 0 && (
+        <span style={{
+          position: 'absolute', top: -4, right: -4,
+          background: 'var(--brand)', color: '#0a0c18',
+          borderRadius: 'var(--radius-full)', fontSize: '0.65rem',
+          fontWeight: 700, width: 18, height: 18,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          animation: 'pulse 2s ease-in-out infinite',
+        }}>{badge > 9 ? '9+' : badge}</span>
+      )}
+    </button>
+  );
+}
+
+function DropdownItem({ children, onClick, danger }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: 'block', width: '100%', textAlign: 'left',
+        padding: '8px 16px', background: 'none', border: 'none',
+        color: danger ? 'var(--danger)' : 'var(--text-secondary)',
+        fontSize: '0.875rem', cursor: 'pointer',
+        transition: 'all var(--transition-fast)',
+        fontFamily: 'var(--font-body)',
+      }}
+      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-glass)'}
+      onMouseLeave={e => e.currentTarget.style.background = 'none'}
+    >{children}</button>
+  );
+}
