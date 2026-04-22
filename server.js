@@ -4,6 +4,7 @@ import ordersHandler from './api/orders.js';
 import usersHandler from './api/users.js';
 import promosHandler from './api/promos.js';
 import seedHandler from './api/seed.js';
+import emailHandler from './api/email.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.all('/api/orders', runHandler(ordersHandler));
 app.all('/api/users', runHandler(usersHandler));
 app.all('/api/promos', runHandler(promosHandler));
 app.all('/api/seed', runHandler(seedHandler));
+app.all('/api/email', runHandler(emailHandler));
 
 const PORT = 3000;
 app.listen(PORT, () => {

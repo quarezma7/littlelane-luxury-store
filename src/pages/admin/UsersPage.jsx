@@ -53,10 +53,15 @@ export default function UsersPage() {
   const [roleFilter, setRoleFilter] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
-  const filtered = state.users.filter(u =>
-    (!search || u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase())) &&
-    (!roleFilter || u.role === roleFilter)
-  );
+  const usersList = state?.users || [];
+  const filtered = usersList.filter(u => {
+    const nameStr = u.name ? u.name.toLowerCase() : '';
+    const emailStr = u.email ? u.email.toLowerCase() : '';
+    const searchStr = search ? search.toLowerCase() : '';
+    
+    return (!searchStr || nameStr.includes(searchStr) || emailStr.includes(searchStr)) &&
+           (!roleFilter || u.role === roleFilter);
+  });
 
   const handleAdd = (user) => {
     dispatch({ type:'ADD_USER', payload: user });
@@ -83,14 +88,14 @@ export default function UsersPage() {
   };
 
   const thStyle = { padding:'10px 14px', textAlign:'left', color:'var(--text-muted)', fontWeight:500, fontSize:'0.72rem', textTransform:'uppercase', letterSpacing:'0.06em', borderBottom:'1px solid var(--border-glass)' };
-  const fmt = (n) => n.toLocaleString('fr-TN') + ' TND';
+  const fmt = (n) => (n || 0).toLocaleString('fr-TN') + ' TND';
 
   return (
     <div style={{ padding:28 }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24, gap:12, flexWrap:'wrap' }}>
         <div>
           <h1 style={{ fontFamily:'var(--font-display)', fontSize:'1.8rem', marginBottom:4 }}>Users</h1>
-          <p style={{ color:'var(--text-muted)', fontSize:'0.875rem' }}>{state.users.length} registered users</p>
+          <p style={{ color:'var(--text-muted)', fontSize:'0.875rem' }}>{usersList.length} registered users</p>
         </div>
         <Button onClick={addModal.open}>+ Add User</Button>
       </div>
@@ -125,12 +130,12 @@ export default function UsersPage() {
                   <td style={{padding:'12px 14px'}}>
                     <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                       <div style={{ width:34,height:34,borderRadius:'50%', background:'var(--brand-gradient)', color:'#0a0c18', display:'flex',alignItems:'center',justifyContent:'center', fontWeight:700,fontSize:'0.78rem',flexShrink:0 }}>
-                        {u.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2)}
+                        {u.name ? u.name.split(' ').map(n=>n?.[0]).join('').toUpperCase().slice(0,2) : '??'}
                       </div>
-                      <span style={{ fontWeight:500, color:'var(--text-primary)' }}>{u.name}</span>
+                      <span style={{ fontWeight:500, color:'var(--text-primary)' }}>{u.name || 'Unknown User'}</span>
                     </div>
                   </td>
-                  <td style={{padding:'12px 14px',color:'var(--text-muted)',fontSize:'0.8rem'}}>{u.email}</td>
+                  <td style={{padding:'12px 14px',color:'var(--text-muted)',fontSize:'0.8rem'}}>{u.email || 'No email'}</td>
                   <td style={{padding:'12px 14px'}}>
                     <select value={u.role} onChange={e=>changeRole(u,e.target.value)} style={{ background:'var(--bg-glass)', border:'1px solid var(--border-subtle)', borderRadius:6, padding:'4px 8px', color:'var(--text-secondary)', fontSize:'0.8rem', fontFamily:'var(--font-body)', cursor:'pointer' }} onClick={e=>e.stopPropagation()}>
                       {ROLES.map(r=><option key={r} value={r}>{r.charAt(0).toUpperCase()+r.slice(1)}</option>)}

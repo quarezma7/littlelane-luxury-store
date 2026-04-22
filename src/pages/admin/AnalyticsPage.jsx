@@ -42,16 +42,17 @@ export default function AnalyticsPage() {
 
   const heatmapColor = (val) => {
     const intensity = val / 100;
-    return `rgba(232, 165, 176, ${0.05 + intensity * 0.7})`;
+    return `rgba(20, 184, 166, ${0.05 + intensity * 0.7})`;
   };
 
   const cardStyle = {
-    background: 'rgba(15, 18, 30, 0.4)',
-    backdropFilter: 'blur(12px)',
-    border: '1px solid var(--border-glass)',
+    background: 'rgba(255, 255, 255, 0.03)',
+    backdropFilter: 'blur(16px)',
+    WebkitBackdropFilter: 'blur(16px)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
     borderRadius: 'var(--radius-lg)',
     padding: '28px',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
   };
 
@@ -70,7 +71,7 @@ export default function AnalyticsPage() {
               border: 'none',
               color: range===r ? '#000' : 'var(--text-secondary)',
               fontWeight: range===r ? 700 : 500,
-              boxShadow: range===r ? '0 4px 15px rgba(232, 165, 176, 0.3)' : 'none',
+              boxShadow: range===r ? '0 4px 15px rgba(20, 184, 166, 0.3)' : 'none',
               transition:'all var(--transition-fast)',
             }}>{r}</button>
           ))}
@@ -106,7 +107,7 @@ export default function AnalyticsPage() {
                   height:'100%', borderRadius:4,
                   width:`${(p.sales/maxSales)*100}%`,
                   background:'var(--brand-gradient)',
-                  boxShadow: '0 0 10px rgba(232, 165, 176, 0.4)',
+                  boxShadow: '0 0 10px rgba(20, 184, 166, 0.4)',
                   animation:`barGrow 1s cubic-bezier(0.2, 0.8, 0.2, 1) ${i*0.1}s both`,
                   transformOrigin:'left center',
                 }} />
@@ -173,7 +174,7 @@ export default function AnalyticsPage() {
             <span style={{ fontSize:'0.75rem', color:'var(--text-muted)' }}>Low</span>
             <div style={{ display: 'flex', gap: 4 }}>
               {[0.05,0.2,0.4,0.6,0.75].map((v,i) => (
-                <div key={i} style={{ width:20,height:12,borderRadius:3,background:`rgba(232,165,176,${v})` }} />
+                <div key={i} style={{ width:20,height:12,borderRadius:3,background:`rgba(20, 184, 166, ${v})` }} />
               ))}
             </div>
             <span style={{ fontSize:'0.75rem', color:'var(--text-muted)' }}>High</span>
@@ -202,7 +203,7 @@ export default function AnalyticsPage() {
                       return (
                         <td key={ci} style={{ padding:'12px 14px' }}>
                           <div style={{
-                            background:`rgba(232, 165, 176, ${pct/100*0.7+0.05})`,
+                            background:`rgba(20, 184, 166, ${pct/100*0.7+0.05})`,
                             borderRadius:8, padding:'6px 10px', textAlign:'center',
                             color: pct > 50 ? '#000' : 'var(--text-primary)',
                             fontWeight:700, fontSize:'0.8rem',

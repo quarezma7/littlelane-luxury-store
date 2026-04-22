@@ -24,6 +24,7 @@ function OrderDetailModal({ order, isOpen, onClose, onUpdate }) {
         <div className="grid-responsive-2" style={{ gap: 12 }}>
           <InfoBox label="Customer" value={order.customer} />
           <InfoBox label="Email" value={order.email} />
+          <InfoBox label="Phone" value={order.phone || 'N/A'} />
           <InfoBox label="Date" value={order.date} />
           <InfoBox label="Total" value={fmt(order.total)} valueColor="var(--brand)" />
           <InfoBox label="Delivery Address" value={order.address} style={{ gridColumn:'1/-1' }} />
@@ -108,6 +109,27 @@ export default function OrdersPage() {
     dispatch({ type:'UPDATE_ORDER', payload: order });
     addToast('Order updated', 'success');
     addNotification('Order Status Update', `Your order ${order.id} is now ${order.status}.`, order.userId, true);
+
+    // Send Real Email via Backend
+    fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: order.email,
+        subject: `Order Update #${order.id} - ${order.status}`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+            <h2 style="color: #14B8A6;">Update on your order #${order.id}</h2>
+            <p>Hello ${order.customer},</p>
+            <p>Your order status has been updated to: <strong style="font-size: 1.2rem; color: #0D9488;">${order.status}</strong></p>
+            ${order.notes ? `<p style="background: #f8fafc; padding: 12px; border-left: 4px solid #14B8A6;"><strong>Note from store:</strong> ${order.notes}</p>` : ''}
+            <p>If you have any questions, feel free to reply to this email.</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+            <p style="font-size: 0.85rem; color: #64748b;">LittleLane Luxury Store - Tunis, Tunisia</p>
+          </div>
+        `
+      })
+    }).catch(err => console.error('Failed to send real email', err));
   };
 
   const counts = ['All', ...STATUSES].reduce((acc, s) => {

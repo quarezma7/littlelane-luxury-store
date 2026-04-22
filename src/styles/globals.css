@@ -1,43 +1,84 @@
-:root {
-  /* ── Backgrounds (Vanilla & Dusty Rose Theme) ── */
-  --bg-primary: #FFF9F5;
+:root, [data-theme="light"] {
+  /* ── Backgrounds (Light Slate Theme) ── */
+  --bg-primary: #F8FAFC;
   --bg-secondary: #FFFFFF;
-  --bg-tertiary: #F7EFEA;
+  --bg-tertiary: #F1F5F9;
   --bg-card: #FFFFFF;
-  --bg-glass: #FFFFFF;
-  --bg-glass-hover: #FCF4EF;
-  --bg-overlay: rgba(74, 68, 68, 0.3);
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  --bg-glass-hover: rgba(255, 255, 255, 0.9);
+  --bg-overlay: rgba(15, 23, 42, 0.4);
 
-  /* ── Brand Accent (Dusty Rose) ── */
-  --brand: #D49A9A;
-  --brand-light: #E8B8B8;
-  --brand-dark: #BA7E7E;
-  --brand-glow: rgba(212, 154, 154, 0.15);
-  --brand-border: rgba(212, 154, 154, 0.3);
-  --brand-gradient: linear-gradient(135deg, #D49A9A, #E8B8B8, #D49A9A);
+  /* ── Brand Accent (Teal) ── */
+  --brand: #0D9488;
+  --brand-light: #14B8A6;
+  --brand-dark: #0F766E;
+  --brand-glow: rgba(13, 148, 136, 0.15);
+  --brand-border: rgba(13, 148, 136, 0.3);
+  --brand-gradient: linear-gradient(135deg, #0F766E, #14B8A6, #0D9488);
 
-  /* ── Text (Warm Charcoal) ── */
-  --text-primary: #4A4444;
-  --text-secondary: #726868;
-  --text-muted: #9E9393;
+  /* ── Text (Dark Slate) ── */
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
   --text-brand: var(--brand-dark);
 
   /* ── Borders (Soft & Clean) ── */
-  --border-glass: #EFE6E1;
-  --border-subtle: #EFE6E1;
-  --border-focus: #D49A9A;
+  --border-glass: rgba(0, 0, 0, 0.06);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-focus: #0D9488;
 
-  /* ── Status Colors (Muted organic tones) ── */
-  --success: #8A9A86;
-  --success-bg: rgba(138, 154, 134, 0.1);
-  --warning: #D4B886;
-  --warning-bg: rgba(212, 184, 134, 0.1);
-  --danger: #C87965;
-  --danger-bg: rgba(200, 121, 101, 0.1);
-  --info: #8AA5B1;
-  --info-bg: rgba(138, 165, 177, 0.1);
+  /* ── Status Colors (Professional tones) ── */
+  --success: #059669;
+  --success-bg: rgba(5, 150, 105, 0.1);
+  --warning: #D97706;
+  --warning-bg: rgba(217, 119, 6, 0.1);
+  --danger: #DC2626;
+  --danger-bg: rgba(220, 38, 38, 0.1);
+  --info: #2563EB;
+  --info-bg: rgba(37, 99, 235, 0.1);
+}
 
-  /* ── Typography (High-end Editorial) ── */
+[data-theme="dark"] {
+  /* ── Backgrounds (Slate & Teal Theme) ── */
+  --bg-primary: #0F172A;
+  --bg-secondary: #1E293B;
+  --bg-tertiary: #334155;
+  --bg-card: #1E293B;
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-glass-hover: rgba(255, 255, 255, 0.1);
+  --bg-overlay: rgba(15, 23, 42, 0.7);
+
+  /* ── Brand Accent (Teal) ── */
+  --brand: #14B8A6;
+  --brand-light: #2DD4BF;
+  --brand-dark: #0D9488;
+  --brand-glow: rgba(20, 184, 166, 0.15);
+  --brand-border: rgba(20, 184, 166, 0.3);
+  --brand-gradient: linear-gradient(135deg, #0D9488, #2DD4BF, #14B8A6);
+
+  /* ── Text (Cool Gray) ── */
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --text-brand: var(--brand-light);
+
+  /* ── Borders (Soft & Clean) ── */
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-focus: #14B8A6;
+
+  /* ── Status Colors (Professional tones) ── */
+  --success: #10B981;
+  --success-bg: rgba(16, 185, 129, 0.1);
+  --warning: #F59E0B;
+  --warning-bg: rgba(245, 158, 11, 0.1);
+  --danger: #EF4444;
+  --danger-bg: rgba(239, 68, 68, 0.1);
+  --info: #3B82F6;
+  --info-bg: rgba(59, 130, 246, 0.1);
+}
+
+:root {
   --font-display: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
 
@@ -188,8 +229,8 @@ img { max-width: 100%; display: block; }
 }
 
 @keyframes brandGlow {
-  0%, 100% { box-shadow: 0 0 10px rgba(232,165,176,0.2); }
-  50% { box-shadow: 0 0 25px rgba(232,165,176,0.5); }
+  0%, 100% { box-shadow: 0 0 10px rgba(20, 184, 166, 0.2); }
+  50% { box-shadow: 0 0 25px rgba(20, 184, 166, 0.5); }
 }
 
 @keyframes float {
@@ -212,7 +253,7 @@ img { max-width: 100%; display: block; }
   background: linear-gradient(
     90deg,
     var(--bg-tertiary) 25%,
-    rgba(232,165,176,0.06) 37%,
+    rgba(20, 184, 166, 0.06) 37%,
     var(--bg-tertiary) 63%
   );
   background-size: 400% 100%;
@@ -228,7 +269,7 @@ img { max-width: 100%; display: block; }
 /* ── Zebra Table ── */
 .table-row-even { background: rgba(255,255,255,0.018); }
 .table-row-odd { background: transparent; }
-.table-row-hover:hover { background: rgba(232,165,176,0.06) !important; cursor: pointer; }
+.table-row-hover:hover { background: rgba(20, 184, 166, 0.06) !important; cursor: pointer; }
 
 /* ── Responsive Utilities ── */
 .grid-responsive-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }

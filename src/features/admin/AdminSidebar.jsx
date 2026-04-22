@@ -74,7 +74,7 @@ export default function AdminSidebar({ collapsed, setCollapsed }) {
                   gap: collapsed ? 0 : 12,
                   padding: collapsed ? '12px 0' : '11px 20px',
                   justifyContent: collapsed ? 'center' : 'flex-start',
-                  background: isActive ? 'rgba(232,165,176,0.1)' : 'transparent',
+                  background: isActive ? 'rgba(20,184,166,0.1)' : 'transparent',
                   borderLeft: `3px solid ${isActive ? 'var(--brand)' : 'transparent'}`,
                   color: isActive ? 'var(--brand)' : 'var(--text-secondary)',
                   textDecoration: 'none',

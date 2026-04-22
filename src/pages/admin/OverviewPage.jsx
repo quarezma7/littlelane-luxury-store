@@ -37,7 +37,7 @@ export default function OverviewPage() {
   const donutData = CATEGORIES.map((cat, i) => ({
     label: cat,
     value: categoryRevenue[i].value,
-    color: ['#e8a5b0','#a1d2ce','#f6c4cd','#84c0b8','#d28b98'][i],
+    color: ['#2DD4BF','#60A5FA','#F472B6','#A78BFA','#FBBF24'][i],
   }));
 
   const lowStock = store.products.filter(p => p.stock <= 5 && p.stock > 0 && p.active);
@@ -50,12 +50,13 @@ export default function OverviewPage() {
   };
 
   const cardStyle = {
-    background: 'rgba(15, 18, 30, 0.4)',
-    backdropFilter: 'blur(12px)',
-    border: '1px solid var(--border-glass)',
+    background: 'rgba(255, 255, 255, 0.03)',
+    backdropFilter: 'blur(16px)',
+    WebkitBackdropFilter: 'blur(16px)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
     borderRadius: 'var(--radius-lg)',
     padding: '24px',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
   };
 
   return (
@@ -74,7 +75,7 @@ export default function OverviewPage() {
             transition:'all 0.3s ease',
             cursor: 'pointer'
           }}
-            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-6px)';e.currentTarget.style.boxShadow='0 12px 40px rgba(232, 165, 176, 0.1)';e.currentTarget.style.borderColor='var(--brand)';}}
+            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-6px)';e.currentTarget.style.boxShadow='0 12px 40px rgba(20, 184, 166, 0.1)';e.currentTarget.style.borderColor='var(--brand)';}}
             onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow=cardStyle.boxShadow;e.currentTarget.style.borderColor='var(--border-glass)';}}
           >
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:16 }}>
@@ -193,7 +194,7 @@ export default function OverviewPage() {
                       height:'100%', borderRadius:4,
                       width:`${(p.sales/topProducts[0].sales)*100}%`,
                       background:'var(--brand-gradient)',
-                      boxShadow: '0 0 10px rgba(232, 165, 176, 0.5)',
+                      boxShadow: '0 0 10px rgba(20, 184, 166, 0.5)',
                       transition:'width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
                     }} />
                   </div>

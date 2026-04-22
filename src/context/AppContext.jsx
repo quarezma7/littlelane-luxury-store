@@ -6,7 +6,15 @@ const AppContext = createContext(null);
 let toastId = 0;
 
 export function AppProvider({ children }) {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('littlelane_theme');
+    return saved ? saved : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('littlelane_theme', theme);
+  }, [theme]);
   const [currentUser, setCurrentUser] = useState(() => {
     const saved = localStorage.getItem('littlelane_user');
     return saved ? JSON.parse(saved) : null;
@@ -59,11 +67,7 @@ export function AppProvider({ children }) {
   }, []);
 
   const toggleTheme = () => {
-    setTheme(prev => {
-      const next = prev === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      return next;
-    });
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   const login = (user) => {

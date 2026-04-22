@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import AdminSidebar from '../../features/admin/AdminSidebar';
 
 export default function AdminLayout() {
-  const { currentUser, notifications, markNotificationsRead } = useApp();
+  const { theme, toggleTheme, currentUser, notifications, markNotificationsRead } = useApp();
   const [collapsed, setCollapsed] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export default function AdminLayout() {
     <div style={{ 
       display: 'flex', 
       minHeight: '100vh', 
-      background: 'radial-gradient(circle at 15% 50%, rgba(200, 160, 180, 0.05), transparent 25%), radial-gradient(circle at 85% 30%, rgba(130, 190, 180, 0.05), transparent 25%), var(--bg-primary)',
+      background: 'radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.08), transparent 30%), radial-gradient(circle at 85% 30%, rgba(20, 184, 166, 0.08), transparent 30%), var(--bg-primary)',
       position: 'relative'
     }}>
       <AdminSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
@@ -44,15 +44,15 @@ export default function AdminLayout() {
         {/* Admin topbar (Floating Glass) */}
         <header style={{
           height: 68, 
-          background: 'rgba(10, 12, 24, 0.65)', 
+          background: 'rgba(255, 255, 255, 0.05)', 
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid var(--border-glass)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 'var(--radius-lg)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 28px', 
           position: 'sticky', top: 24, zIndex: 50, flexShrink: 0,
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
           marginBottom: 32,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -78,6 +78,26 @@ export default function AdminLayout() {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              style={{
+                background: 'var(--bg-glass)', border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-full)', width: 38, height: 38, color: 'var(--text-secondary)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                transition: 'all var(--transition-fast)'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.color = 'var(--brand)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+            >
+              {theme === 'dark' ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+              )}
+            </button>
+
             <div ref={notifRef} style={{ position: 'relative' }}>
               <button
                 onClick={() => { setShowNotifications(!showNotifications); markNotificationsRead(); }}
@@ -107,7 +127,7 @@ export default function AdminLayout() {
               {showNotifications && (
                 <div style={{
                   position: 'absolute', top: '130%', right: 0, width: 340, maxHeight: 400, overflowY: 'auto',
-                  background: 'rgba(15, 18, 30, 0.95)', backdropFilter: 'blur(20px)', border: '1px solid var(--border-glass)',
+                  background: 'var(--bg-secondary)', backdropFilter: 'blur(20px)', border: '1px solid var(--border-glass)',
                   borderRadius: 'var(--radius-lg)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', zIndex: 100,
                   display: 'flex', flexDirection: 'column'
                 }}>
@@ -142,7 +162,7 @@ export default function AdminLayout() {
                 width: 38, height: 38, borderRadius: '50%',
                 background: 'var(--brand-gradient)', color: '#000',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 0 15px rgba(232, 165, 176, 0.3)'
+                fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 0 15px rgba(20, 184, 166, 0.3)'
               }}>
                 {currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2)}
               </div>
@@ -161,7 +181,7 @@ export default function AdminLayout() {
                 color: 'var(--brand)', fontSize: '0.8rem', cursor: 'pointer',
                 fontWeight: 600, transition: 'all var(--transition-fast)',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'var(--brand-gradient)'; e.currentTarget.style.color = '#000'; e.currentTarget.style.border = '1px solid transparent'; e.currentTarget.style.boxShadow = '0 0 15px rgba(232,165,176,0.4)'; }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'var(--brand-gradient)'; e.currentTarget.style.color = '#000'; e.currentTarget.style.border = '1px solid transparent'; e.currentTarget.style.boxShadow = '0 0 15px rgba(20, 184, 166, 0.4)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--brand)'; e.currentTarget.style.border = '1px solid var(--brand)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
               Exit to Store

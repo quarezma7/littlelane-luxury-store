@@ -13,12 +13,12 @@ export default function FunnelChart({ steps = [] }) {
             <div style={{ flex: 1, height: 32, background: 'rgba(255,255,255,0.05)', borderRadius: 8, overflow: 'hidden', position: 'relative', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)' }}>
               <div style={{
                 height: '100%', width: `${pct}%`,
-                background: `linear-gradient(90deg, var(--brand), #e8a5b0)`,
+                background: `linear-gradient(90deg, var(--brand), #2DD4BF)`,
                 borderRadius: 8,
                 transition: 'width 1s cubic-bezier(0.34,1.2,0.64,1)',
                 animation: `barGrow 0.8s ${i * 0.15}s cubic-bezier(0.2, 0.8, 0.2, 1) both`,
                 transformOrigin: 'left center',
-                boxShadow: '0 0 15px rgba(232, 165, 176, 0.3)'
+                boxShadow: '0 0 15px rgba(20, 184, 166, 0.3)'
               }} />
               <span style={{
                 position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',

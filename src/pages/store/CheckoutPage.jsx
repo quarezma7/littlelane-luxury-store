@@ -10,7 +10,7 @@ const fmt = (n) => n.toLocaleString('fr-TN') + ' TND';
 
 export default function CheckoutPage() {
   const { state, dispatch, discountedTotal } = useStore();
-  const { currentUser, addToast } = useApp();
+  const { currentUser, addToast, addNotification } = useApp();
   const { state: adminState } = useAdmin();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -63,7 +63,7 @@ export default function CheckoutPage() {
       type: 'ADD_ORDER',
       payload: {
         id: orderId, userId: currentUser?.id || 'guest',
-        customer: form.name, email: form.email,
+        customer: form.name, email: form.email, phone: form.phone || 'N/A',
         address: `${form.address}, ${form.city}`,
         items: state.cart.map(i => ({ productId: i.productId, name: i.name, qty: i.qty, price: i.price })),
         total: discountedTotal, status: 'Pending',
@@ -73,6 +73,36 @@ export default function CheckoutPage() {
     dispatch({ type: 'CLEAR_CART' });
     setPlaced(true);
     addToast('Order placed successfully! 🎉', 'success');
+    addNotification(
+      'Order Confirmation',
+      `Thank you for shopping at LittleLane! Your order ${orderId} has been successfully placed. We'll notify you when it ships.`,
+      currentUser?.id || null, // null will target admins if it's a guest checkout, or we can just leave it as null
+      true
+    );
+
+    // Send Real Email via Backend
+    fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: form.email,
+        subject: `Order Confirmation #${orderId} - LittleLane`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+            <h2 style="color: #14B8A6;">Thank you for your order, ${form.name}!</h2>
+            <p>We have received your order <strong>#${orderId}</strong> and are getting it ready for shipment.</p>
+            <div style="background: #f1f5f9; padding: 16px; border-radius: 8px; margin: 20px 0;">
+              <strong>Delivery Address:</strong><br/>
+              ${form.address}, ${form.city}<br/>
+              Phone: ${form.phone || 'N/A'}
+            </div>
+            <p>Total Paid: <strong>${discountedTotal.toLocaleString('fr-TN')} TND</strong></p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+            <p style="font-size: 0.85rem; color: #64748b;">LittleLane Luxury Store - Tunis, Tunisia</p>
+          </div>
+        `
+      })
+    }).catch(err => console.error('Failed to send real email', err));
   };
 
   const inStyle = {
@@ -123,7 +153,7 @@ export default function CheckoutPage() {
                 onFocus={focus} onBlur={blur} placeholder="Special instructions..." />
             </div>
 
-            <div style={{ background: 'rgba(232,165,176,0.08)', border: '1px solid var(--brand-border)', borderRadius: 10, padding: '12px 16px', marginTop: 4 }}>
+            <div style={{ background: 'rgba(20, 184, 166, 0.08)', border: '1px solid var(--brand-border)', borderRadius: 10, padding: '12px 16px', marginTop: 4 }}>
               <h3 style={{ fontSize: '0.85rem', color: 'var(--brand)', marginBottom: 6 }}>💳 Payment Method</h3>
               <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Cash on Delivery — Pay when your order arrives</p>
             </div>
