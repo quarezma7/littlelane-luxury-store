@@ -1,41 +1,41 @@
 :root {
-  /* ── Backgrounds (Minimalist Monochrome Theme) ── */
-  --bg-primary: #fcfcfc;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f5f5f5;
-  --bg-card: #ffffff;
-  --bg-glass: #ffffff;
-  --bg-glass-hover: #fafafa;
-  --bg-overlay: rgba(0, 0, 0, 0.4);
+  /* ── Backgrounds (Vanilla & Dusty Rose Theme) ── */
+  --bg-primary: #FFF9F5;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F7EFEA;
+  --bg-card: #FFFFFF;
+  --bg-glass: #FFFFFF;
+  --bg-glass-hover: #FCF4EF;
+  --bg-overlay: rgba(74, 68, 68, 0.3);
 
-  /* ── Brand Accent (Pure Black) ── */
-  --brand: #000000;
-  --brand-light: #333333;
-  --brand-dark: #000000;
-  --brand-glow: rgba(0, 0, 0, 0.05);
-  --brand-border: #000000;
-  --brand-gradient: linear-gradient(135deg, #000000, #333333, #000000);
+  /* ── Brand Accent (Dusty Rose) ── */
+  --brand: #D49A9A;
+  --brand-light: #E8B8B8;
+  --brand-dark: #BA7E7E;
+  --brand-glow: rgba(212, 154, 154, 0.15);
+  --brand-border: rgba(212, 154, 154, 0.3);
+  --brand-gradient: linear-gradient(135deg, #D49A9A, #E8B8B8, #D49A9A);
 
-  /* ── Text ── */
-  --text-primary: #000000;
-  --text-secondary: #4a4a4a;
-  --text-muted: #888888;
-  --text-brand: var(--brand);
+  /* ── Text (Warm Charcoal) ── */
+  --text-primary: #4A4444;
+  --text-secondary: #726868;
+  --text-muted: #9E9393;
+  --text-brand: var(--brand-dark);
 
-  /* ── Borders (Sharp & Clean) ── */
-  --border-glass: #eaeaea;
-  --border-subtle: #eaeaea;
-  --border-focus: #000000;
+  /* ── Borders (Soft & Clean) ── */
+  --border-glass: #EFE6E1;
+  --border-subtle: #EFE6E1;
+  --border-focus: #D49A9A;
 
-  /* ── Status Colors ── */
-  --success: #000000;
-  --success-bg: rgba(0, 0, 0, 0.04);
-  --warning: #000000;
-  --warning-bg: rgba(0, 0, 0, 0.04);
-  --danger: #000000;
-  --danger-bg: rgba(0, 0, 0, 0.04);
-  --info: #000000;
-  --info-bg: rgba(0, 0, 0, 0.04);
+  /* ── Status Colors (Muted organic tones) ── */
+  --success: #8A9A86;
+  --success-bg: rgba(138, 154, 134, 0.1);
+  --warning: #D4B886;
+  --warning-bg: rgba(212, 184, 134, 0.1);
+  --danger: #C87965;
+  --danger-bg: rgba(200, 121, 101, 0.1);
+  --info: #8AA5B1;
+  --info-bg: rgba(138, 165, 177, 0.1);
 
   /* ── Typography (High-end Editorial) ── */
   --font-display: 'Inter', sans-serif;
