@@ -22,10 +22,20 @@ export default function SettingsPage() {
     updateSettings(form);
   };
 
-  const handleReset = () => {
-    adminDispatch({ type:'RESET_ALL' });
-    storeDispatch({ type:'CLEAR_CART' });
-    addToast('All data reset to defaults', 'warning');
+  const handleReset = async () => {
+    try {
+      const res = await fetch('/api/seed', { method: 'POST' });
+      if (res.ok) {
+        adminDispatch({ type:'RESET_ALL' });
+        storeDispatch({ type:'CLEAR_CART' });
+        addToast('Database successfully reset to defaults!', 'success');
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        addToast('Failed to reset database', 'danger');
+      }
+    } catch (e) {
+      addToast('Error connecting to database', 'danger');
+    }
     setResetConfirm(false);
     setResetDouble(false);
   };

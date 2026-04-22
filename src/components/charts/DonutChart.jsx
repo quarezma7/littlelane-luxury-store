@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function polarToXY(cx, cy, r, angle) {
   const rad = ((angle - 90) * Math.PI) / 180;
@@ -13,8 +13,13 @@ function describeArc(cx, cy, r, startAngle, endAngle) {
 
 export default function DonutChart({ data = [], size = 180, thickness = 40 }) {
   const [hovered, setHovered] = useState(null);
+  const [animated, setAnimated] = useState(false);
   const total = data.reduce((s, d) => s + d.value, 0);
   const cx = size / 2, cy = size / 2, r = size / 2 - thickness / 2;
+
+  useEffect(() => {
+    setTimeout(() => setAnimated(true), 100);
+  }, []);
 
   let cumAngle = 0;
   const segments = data.map((d, i) => {
@@ -24,57 +29,78 @@ export default function DonutChart({ data = [], size = 180, thickness = 40 }) {
     return { ...d, start, end: cumAngle, angle };
   });
 
-  const centerLabel = hovered !== null
-    ? { label: data[hovered].label, value: data[hovered].value + '%' }
-    : { label: 'Total', value: total + '%' };
-
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
       <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-        <svg width={size} height={size}>
-          {segments.map((seg, i) => (
-            <path
-              key={i}
-              d={describeArc(cx, cy, r, seg.start, seg.end)}
-              fill="none"
-              stroke={seg.color}
-              strokeWidth={hovered === i ? thickness + 4 : thickness}
-              strokeLinecap="butt"
-              style={{
-                cursor: 'pointer',
-                transition: 'stroke-width 0.2s ease',
-                filter: hovered === i ? `drop-shadow(0 0 8px ${seg.color}80)` : 'none',
-              }}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-            />
-          ))}
+        <svg width={size} height={size} style={{ overflow: 'visible' }}>
+          <defs>
+            <filter id="glow-donut" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+          {segments.map((seg, i) => {
+            // Animation values
+            const dashLength = (seg.angle / 360) * (2 * Math.PI * r);
+            const circumference = 2 * Math.PI * r;
+            
+            return (
+              <path
+                key={i}
+                d={describeArc(cx, cy, r, seg.start, seg.end - 0.5)}
+                fill="none"
+                stroke={seg.color}
+                strokeWidth={hovered === i ? thickness + 8 : thickness}
+                strokeLinecap="round"
+                filter={hovered === i ? "url(#glow-donut)" : ""}
+                style={{
+                  cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+                  strokeDasharray: circumference,
+                  strokeDashoffset: animated ? 0 : circumference,
+                  animation: `drawArc 1s cubic-bezier(0.2, 0.8, 0.2, 1) ${i * 0.1}s forwards`,
+                  opacity: hovered !== null && hovered !== i ? 0.3 : 1
+                }}
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+              />
+            );
+          })}
         </svg>
         <div style={{
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           pointerEvents: 'none',
         }}>
-          <span style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--brand)', fontFamily: 'var(--font-display)' }}>
+          <span style={{ 
+            fontSize: '1.4rem', fontWeight: 800, 
+            color: hovered !== null ? segments[hovered].color : 'var(--brand)', 
+            fontFamily: 'var(--font-display)',
+            transition: 'color 0.3s'
+          }}>
             {hovered !== null ? data[hovered].value + '%' : '100%'}
           </span>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2, fontWeight: 500 }}>
             {hovered !== null ? data[hovered].label : 'Total'}
           </span>
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {data.map((d, i) => (
           <div key={i}
             style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              cursor: 'pointer', opacity: hovered !== null && hovered !== i ? 0.5 : 1,
-              transition: 'opacity 0.2s',
+              display: 'flex', alignItems: 'center', gap: 10,
+              cursor: 'pointer', opacity: hovered !== null && hovered !== i ? 0.4 : 1,
+              transition: 'all 0.2s',
+              transform: hovered === i ? 'translateX(4px)' : 'none'
             }}
             onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
-            <div style={{ width: 10, height: 10, borderRadius: '50%', background: d.color, flexShrink: 0 }} />
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{d.label}</span>
-            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)', marginLeft: 'auto' }}>{d.value}%</span>
+            <div style={{ 
+              width: 12, height: 12, borderRadius: '50%', background: d.color, flexShrink: 0,
+              boxShadow: hovered === i ? `0 0 10px ${d.color}` : 'none'
+            }} />
+            <span style={{ fontSize: '0.85rem', color: hovered === i ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{d.label}</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', marginLeft: 'auto' }}>{d.value}%</span>
           </div>
         ))}
       </div>
