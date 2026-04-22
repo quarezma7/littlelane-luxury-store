@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../../context/StoreContext';
 import ProductCard from '../../features/products/ProductCard';
@@ -7,6 +7,7 @@ import SortDropdown from '../../features/products/SortDropdown';
 import { FEATURED_COLLECTIONS } from '../../data/seed';
 import { SkeletonCard } from '../../components/ui/Skeleton';
 import EmptyState from '../../components/ui/EmptyState';
+import Drawer from '../../components/ui/Drawer';
 
 export default function StorePage() {
   const { state } = useStore();
@@ -16,6 +17,8 @@ export default function StorePage() {
   const [sort, setSort] = useState('popular');
   const maxPrice = Math.max(...state.products.map(p => p.price));
   const [filters, setFilters] = useState({ category: null, maxPrice, minRating: null, inStock: false });
+  const [filterOpen, setFilterOpen] = useState(false);
+  const activeFiltersCount = (filters.category ? 1 : 0) + (filters.minRating ? 1 : 0) + (filters.inStock ? 1 : 0) + (filters.maxPrice < maxPrice ? 1 : 0);
 
   useEffect(() => { setTimeout(() => setLoading(false), 800); }, []);
 
@@ -65,33 +68,65 @@ export default function StorePage() {
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--text-primary)' }}>Our Collection</h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: 4 }}>{filteredProducts.length} pieces available</p>
             </div>
-            <SortDropdown value={sort} onChange={setSort} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <button
+                onClick={() => setFilterOpen(true)}
+                style={{
+                  padding: '8px 16px', background: 'var(--bg-glass)', border: '1px solid var(--border-glass)',
+                  borderRadius: 'var(--radius-full)', color: 'var(--text-primary)', fontSize: '0.9rem',
+                  display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', transition: 'all var(--transition-fast)'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.color = 'var(--brand)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-glass)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+              >
+                ✨ Filter & Sort {activeFiltersCount > 0 && <span style={{ background: 'var(--brand)', color: '#0a0c18', padding: '0 6px', borderRadius: 10, fontSize: '0.7rem', fontWeight: 'bold' }}>{activeFiltersCount}</span>}
+              </button>
+              <div className="desktop-only"><SortDropdown value={sort} onChange={setSort} /></div>
+            </div>
           </div>
         )}
 
-        <div style={{ display: 'flex', gap: 28, alignItems: 'flex-start' }}>
-          <FilterSidebar filters={filters} setFilters={setFilters} maxPrice={maxPrice} />
-
+        <div>
           <div style={{ flex: 1, minWidth: 0 }}>
             {searchQuery && (
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-                <SortDropdown value={sort} onChange={setSort} />
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginBottom: 16 }}>
+                <button
+                  onClick={() => setFilterOpen(true)}
+                  style={{
+                    padding: '8px 16px', background: 'var(--bg-glass)', border: '1px solid var(--border-glass)',
+                    borderRadius: 'var(--radius-full)', color: 'var(--text-primary)', fontSize: '0.9rem',
+                    display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', transition: 'all var(--transition-fast)'
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.color = 'var(--brand)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-glass)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                >
+                  ✨ Filter & Sort {activeFiltersCount > 0 && <span style={{ background: 'var(--brand)', color: '#0a0c18', padding: '0 6px', borderRadius: 10, fontSize: '0.7rem', fontWeight: 'bold' }}>{activeFiltersCount}</span>}
+                </button>
+                <div className="desktop-only"><SortDropdown value={sort} onChange={setSort} /></div>
               </div>
             )}
             {loading ? (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))', gap: 20 }}>
+              <div className="product-grid">
                 {Array.from({length: 8}).map((_,i) => <SkeletonCard key={i} />)}
               </div>
             ) : filteredProducts.length === 0 ? (
               <EmptyState emoji="🔍" title="No products found" subtitle="Try adjusting your filters or search query" />
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))', gap: 20 }}>
+              <div className="product-grid">
                 {filteredProducts.map(p => <ProductCard key={p.id} product={p} />)}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <Drawer isOpen={filterOpen} onClose={() => setFilterOpen(false)} title="Filter & Sort" width={340}>
+        <div className="mobile-only" style={{ padding: '24px 24px 0', paddingBottom: 0 }}>
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Sort By</div>
+          <SortDropdown value={sort} onChange={setSort} />
+        </div>
+        <FilterSidebar filters={filters} setFilters={setFilters} maxPrice={maxPrice} />
+      </Drawer>
     </div>
   );
 }
@@ -200,14 +235,49 @@ function HeroSection() {
 }
 
 function FeaturedCollections() {
+  const scrollRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -300 : 300;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section id="collection" style={{ padding: '60px 0 40px' }}>
+    <section id="collection" style={{ padding: '60px 0 40px', position: 'relative' }}>
       <div className="page-container">
-        <div style={{ marginBottom: 28, display: 'flex', alignItems: 'baseline', gap: 12 }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem' }}>Featured Collections</h2>
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Scroll to explore →</span>
+        <div style={{ marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem' }}>Featured Collections</h2>
+            <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }} className="desktop-only">Scroll to explore →</span>
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={() => scroll('left')}
+              style={{
+                width: 36, height: 36, borderRadius: '50%', background: 'var(--bg-glass)',
+                border: '1px solid var(--border-subtle)', color: 'var(--text-primary)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                transition: 'all var(--transition-fast)'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.color = 'var(--brand)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+            >←</button>
+            <button
+              onClick={() => scroll('right')}
+              style={{
+                width: 36, height: 36, borderRadius: '50%', background: 'var(--bg-glass)',
+                border: '1px solid var(--border-subtle)', color: 'var(--text-primary)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                transition: 'all var(--transition-fast)'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.color = 'var(--brand)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+            >→</button>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 12, scrollbarWidth: 'none' }}>
+        <div ref={scrollRef} style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 12, scrollbarWidth: 'none', scrollBehavior: 'smooth' }}>
           {FEATURED_COLLECTIONS.map((col, i) => (
             <div key={col.id} style={{
               flexShrink: 0, width: 180, background: 'var(--bg-glass)',

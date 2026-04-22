@@ -73,7 +73,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Two columns */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:20 }}>
+      <div className="grid-responsive-2" style={{ marginBottom: 20 }}>
         {/* Top products */}
         <div style={{ background:'var(--bg-glass)', border:'1px solid var(--border-glass)', borderRadius:'var(--radius-md)', padding:24 }}>
           <h3 style={{ fontFamily:'var(--font-display)', fontSize:'1.1rem', color:'var(--brand)', marginBottom:20 }}>Top Products by Revenue</h3>
@@ -113,7 +113,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Heatmap + Cohort */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:20 }}>
+      <div className="grid-responsive-2">
         {/* Heatmap */}
         <div style={{ background:'var(--bg-glass)', border:'1px solid var(--border-glass)', borderRadius:'var(--radius-md)', padding:24 }}>
           <h3 style={{ fontFamily:'var(--font-display)', fontSize:'1.1rem', color:'var(--brand)', marginBottom:20 }}>Sales Heatmap (Hour × Day)</h3>

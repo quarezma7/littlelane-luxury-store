@@ -38,7 +38,7 @@ export default function Navbar() {
       transition: 'all 0.3s ease',
     }}>
       <div className="page-container" style={{
-        display: 'flex', alignItems: 'center', gap: 24, height: 68,
+        display: 'flex', alignItems: 'center', gap: '12px 24px', minHeight: 68, padding: '12px 24px', flexWrap: 'wrap', justifyContent: 'space-between'
       }}>
         {/* Logo */}
         <Link to="/" style={{
@@ -49,7 +49,7 @@ export default function Navbar() {
         }}>LittleLane</Link>
 
         {/* Search */}
-        <div style={{ flex: 1, maxWidth: 440, position: 'relative' }}>
+        <div className="nav-search" style={{ flex: '1 1 200px', maxWidth: 440, position: 'relative' }}>
           <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.9rem' }}>🔍</span>
           <input
             type="text"
@@ -68,7 +68,7 @@ export default function Navbar() {
         </div>
 
         {/* Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
+        <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {/* Wishlist */}
           <NavBtn onClick={() => navigate('/wishlist')} title="Wishlist" badge={wishlistCount}>♡</NavBtn>
 

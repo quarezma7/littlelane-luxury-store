@@ -28,7 +28,7 @@ function PromoFormModal({ isOpen, onClose, onSave }) {
     <Modal isOpen={isOpen} onClose={onClose} title="Create Promo Code" maxWidth={400}>
       <label style={lab}>Promo Code *</label>
       <input style={{...inp}} value={form.code} onChange={e=>setForm(f=>({...f,code:e.target.value.toUpperCase()}))} onFocus={focus} onBlur={blur} placeholder="SUMMER30" />
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 16px' }}>
+      <div className="grid-responsive-2" style={{ gap: '0 16px' }}>
         <div>
           <label style={lab}>Discount %</label>
           <input type="number" min="1" max="90" style={inp} value={form.value} onChange={e=>setForm(f=>({...f,value:e.target.value}))} onFocus={focus} onBlur={blur} placeholder="20" />

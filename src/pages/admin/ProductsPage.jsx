@@ -44,7 +44,7 @@ function ProductFormModal({ isOpen, onClose, product, onSave }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={form.id ? 'Edit Product' : 'Add New Product'} maxWidth={540}>
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 16px' }}>
+      <div className="grid-responsive-2" style={{ gap: '0 16px' }}>
         {/* Emoji picker */}
         <div style={{ gridColumn:'1/-1', marginBottom:14 }}>
           <label style={lab}>Product Icon</label>

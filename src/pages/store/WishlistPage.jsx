@@ -42,7 +42,7 @@ export default function WishlistPage() {
           action={<Link to="/"><Button>Browse Collection</Button></Link>}
         />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 20 }}>
+        <div className="product-grid">
           {state.wishlist.map((item) => {
             const product = state.products.find(p => p.id === item.productId);
             return (

@@ -38,7 +38,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="" maxWidth={620}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) 1fr', gap: 24 }}>
+      <div className="grid-responsive-quickview">
         {/* Photo Gallery */}
         <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
           <div style={{

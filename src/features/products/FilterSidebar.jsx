@@ -8,17 +8,10 @@ export default function FilterSidebar({ filters, setFilters, maxPrice }) {
   };
 
   return (
-    <aside style={{
-      width: 220, flexShrink: 0,
-      background: 'var(--bg-glass)', border: '1px solid var(--border-glass)',
-      borderRadius: 'var(--radius-md)', padding: '20px 16px',
+    <div style={{
       display: 'flex', flexDirection: 'column', gap: 24,
-      height: 'fit-content', position: 'sticky', top: 88,
+      padding: '24px',
     }}>
-      <div style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', color: 'var(--brand)', fontWeight: 600 }}>
-        Filters
-      </div>
-      <div className="brand-divider" />
 
       {/* Category */}
       <div>
@@ -93,7 +86,7 @@ export default function FilterSidebar({ filters, setFilters, maxPrice }) {
         onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.color = 'var(--brand)'; }}
         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-subtle)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
       >↺ Reset Filters</button>
-    </aside>
+    </div>
   );
 }
 

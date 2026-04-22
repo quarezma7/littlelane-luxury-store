@@ -89,12 +89,12 @@ export default function CheckoutPage() {
     <div className="page-container" style={{ padding: '40px 24px 80px' }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', marginBottom: 32 }}>Checkout</h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 32, alignItems: 'start' }}>
+      <div className="grid-responsive-checkout">
         {/* Form */}
         <div>
           <div style={{ background: 'var(--bg-glass)', border: '1px solid var(--border-glass)', borderRadius: 'var(--radius-md)', padding: '28px 24px' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', marginBottom: 20, color: 'var(--brand)' }}>Delivery Information</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 16px' }}>
+            <div className="grid-responsive-2">
               <div>
                 <label style={labStyle}>Full Name *</label>
                 <input style={inStyle} value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} onFocus={focus} onBlur={blur} placeholder="Youssef Trabelsi" />

@@ -21,7 +21,7 @@ function OrderDetailModal({ order, isOpen, onClose, onUpdate }) {
     <Modal isOpen={isOpen} onClose={onClose} title={`Order ${order.id}`} maxWidth={580}>
       <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
         {/* Customer info */}
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <div className="grid-responsive-2" style={{ gap: 12 }}>
           <InfoBox label="Customer" value={order.customer} />
           <InfoBox label="Email" value={order.email} />
           <InfoBox label="Date" value={order.date} />

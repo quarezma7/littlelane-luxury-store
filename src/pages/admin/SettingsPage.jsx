@@ -48,7 +48,7 @@ export default function SettingsPage() {
       <Section title="Store Information">
         <label style={lab}>Store Name</label>
         <input style={inp} value={form.storeName} onChange={e=>setForm(f=>({...f,storeName:e.target.value}))} onFocus={focus} onBlur={blur} />
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 16px' }}>
+        <div className="grid-responsive-2" style={{ gap: '0 16px' }}>
           <div>
             <label style={lab}>Currency</label>
             <input style={inp} value={form.currency} onChange={e=>setForm(f=>({...f,currency:e.target.value}))} onFocus={focus} onBlur={blur} />

@@ -57,7 +57,7 @@ export default function OverviewPage() {
       </div>
 
       {/* KPI Cards */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))', gap: 16 }}>
+      <div className="grid-responsive-auto" style={{ marginBottom: 20 }}>
         {kpis.map((kpi, i) => (
           <div key={i} style={{
             background:'var(--bg-glass)', border:'1px solid var(--border-glass)',
@@ -86,7 +86,7 @@ export default function OverviewPage() {
       </div>
 
       {/* Charts Row */}
-      <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr', gap:20 }}>
+      <div className="grid-responsive-2-1" style={{ marginBottom: 20 }}>
         <div style={{ background:'var(--bg-glass)', border:'1px solid var(--border-glass)', borderRadius:'var(--radius-md)', padding:'24px' }}>
           <h3 style={{ fontFamily:'var(--font-display)', fontSize:'1.1rem', marginBottom:20, color:'var(--brand)' }}>Revenue — 12 Months</h3>
           <BarChart data={revenueData} height={220} />
@@ -98,7 +98,7 @@ export default function OverviewPage() {
       </div>
 
       {/* Bottom Row */}
-      <div style={{ display:'grid', gridTemplateColumns:'1.5fr 1fr', gap:20 }}>
+      <div className="grid-responsive-1-5-1">
         {/* Recent Orders */}
         <div style={{ background:'var(--bg-glass)', border:'1px solid var(--border-glass)', borderRadius:'var(--radius-md)', padding:'24px' }}>
           <h3 style={{ fontFamily:'var(--font-display)', fontSize:'1.1rem', marginBottom:16, color:'var(--brand)' }}>Recent Orders</h3>
