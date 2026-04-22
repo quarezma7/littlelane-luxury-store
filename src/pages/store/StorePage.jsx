@@ -139,14 +139,14 @@ function HeroSection() {
     <section style={{
       minHeight: '88vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
       textAlign: 'center', position: 'relative', overflow: 'hidden',
-      background: 'radial-gradient(ellipse at top, rgba(232,165,176,0.08) 0%, transparent 60%), var(--bg-primary)',
+      background: 'radial-gradient(ellipse at top, rgba(37, 99, 235, 0.08) 0%, transparent 60%), var(--bg-primary)',
     }}>
       {/* Decorative circles */}
       <div style={{ position: 'absolute', width: 600, height: 600, borderRadius: '50%',
-        border: '1px solid rgba(232,165,176,0.05)', top: '50%', left: '50%',
+        border: '1px solid rgba(37, 99, 235, 0.05)', top: '50%', left: '50%',
         transform: 'translate(-50%,-50%)', pointerEvents: 'none' }} />
       <div style={{ position: 'absolute', width: 400, height: 400, borderRadius: '50%',
-        border: '1px solid rgba(232,165,176,0.08)', top: '50%', left: '50%',
+        border: '1px solid rgba(37, 99, 235, 0.08)', top: '50%', left: '50%',
         transform: 'translate(-50%,-50%)', pointerEvents: 'none' }} />
 
       <div style={{ position: 'relative', padding: '0 24px', maxWidth: 720 }}>
@@ -193,7 +193,7 @@ function HeroSection() {
             display: 'inline-block', transition: 'all var(--transition-base)',
             letterSpacing: '0.04em',
           }}
-            onMouseEnter={e => { e.target.style.transform = 'scale(1.04)'; e.target.style.boxShadow = '0 8px 24px rgba(232,165,176,0.35)'; }}
+            onMouseEnter={e => { e.target.style.transform = 'scale(1.04)'; e.target.style.boxShadow = '0 8px 24px rgba(37, 99, 235, 0.35)'; }}
             onMouseLeave={e => { e.target.style.transform = ''; e.target.style.boxShadow = ''; }}
           >Shop Now</a>
           <a href="#collection" style={{

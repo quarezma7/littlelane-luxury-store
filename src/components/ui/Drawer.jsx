@@ -38,7 +38,6 @@ export default function Drawer({ isOpen, onClose, title, children, width = 440 }
         transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
         transition: 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)',
         display: 'flex', flexDirection: 'column',
-        boxShadow: '-20px 0 60px rgba(0,0,0,0.5)',
       }}>
         {/* Header */}
         <div style={{
