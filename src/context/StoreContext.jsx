@@ -52,6 +52,8 @@ function storeReducer(state, action) {
       return { ...state, wishlist: [] };
 
     // ── Orders ──
+    case 'SET_ORDERS':
+      return { ...state, orders: action.payload };
     case 'ADD_ORDER':
       return { ...state, orders: [action.payload, ...state.orders] };
     case 'UPDATE_ORDER':
@@ -93,11 +95,56 @@ const getInitialState = () => {
 };
 
 export function StoreProvider({ children }) {
-  const [state, dispatch] = useReducer(storeReducer, null, getInitialState);
+  const [state, rawDispatch] = useReducer(storeReducer, null, getInitialState);
 
+  // Fetch initial global data from MongoDB
+  useEffect(() => {
+    const fetchGlobalData = async () => {
+      try {
+        const [prodRes, ordRes] = await Promise.all([
+          fetch('/api/products'),
+          fetch('/api/orders')
+        ]);
+        if (prodRes.ok) {
+          const products = await prodRes.json();
+          if (products.length > 0) rawDispatch({ type: 'SET_PRODUCTS', payload: products });
+        }
+        if (ordRes.ok) {
+          const orders = await ordRes.json();
+          // Assuming we add SET_ORDERS to reducer
+          if (orders.length > 0) rawDispatch({ type: 'SET_ORDERS', payload: orders });
+        }
+      } catch (e) {
+        console.error('Failed to fetch from MongoDB', e);
+      }
+    };
+    fetchGlobalData();
+  }, []);
+
+  // Save session state (cart, wishlist) to localStorage
   useEffect(() => {
     localStorage.setItem('littlelane_store_data', JSON.stringify(state));
   }, [state]);
+
+  const dispatch = async (action) => {
+    rawDispatch(action); // Optimistic UI update
+
+    try {
+      if (action.type === 'ADD_PRODUCT') {
+        await fetch('/api/products', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(action.payload) });
+      } else if (action.type === 'UPDATE_PRODUCT') {
+        await fetch('/api/products', { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(action.payload) });
+      } else if (action.type === 'DELETE_PRODUCT') {
+        await fetch(`/api/products?id=${action.payload}`, { method: 'DELETE' });
+      } else if (action.type === 'ADD_ORDER') {
+        await fetch('/api/orders', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(action.payload) });
+      } else if (action.type === 'UPDATE_ORDER') {
+        await fetch('/api/orders', { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(action.payload) });
+      }
+    } catch (e) {
+      console.error('DB Sync failed', e);
+    }
+  };
 
   const cartTotal = state.cart.reduce((sum, item) => {
     const product = state.products.find(p => p.id === item.productId);
