@@ -15,12 +15,12 @@ export default function AdminSidebar({ collapsed, setCollapsed }) {
   const location = useLocation();
 
   return (
-    <aside style={{
+    <aside className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`} style={{
       width: collapsed ? 64 : 220,
       background: 'var(--bg-secondary)',
       borderRight: '1px solid var(--border-glass)',
       display: 'flex', flexDirection: 'column',
-      transition: 'width 0.3s cubic-bezier(0.25,0.46,0.45,0.94)',
+      transition: 'all 0.3s cubic-bezier(0.25,0.46,0.45,0.94)',
       flexShrink: 0, height: '100vh', position: 'sticky', top: 0,
       overflowX: 'hidden', zIndex: 100,
     }}>

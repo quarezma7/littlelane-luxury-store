@@ -5,7 +5,7 @@ import AdminSidebar from '../../features/admin/AdminSidebar';
 
 export default function AdminLayout() {
   const { currentUser } = useApp();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const navigate = useNavigate();
 
   if (!currentUser || currentUser.role !== 'admin') {
@@ -23,6 +23,15 @@ export default function AdminLayout() {
           padding: '0 28px', position: 'sticky', top: 0, zIndex: 50, flexShrink: 0,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button 
+              className="mobile-only" 
+              onClick={() => setCollapsed(false)}
+              style={{
+                background: 'none', border: '1px solid var(--border-subtle)', borderRadius: 6,
+                color: 'var(--text-primary)', width: 32, height: 32,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+              }}
+            >☰</button>
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
               LittleLane Admin Panel
             </span>
@@ -52,6 +61,15 @@ export default function AdminLayout() {
             >← Store</button>
           </div>
         </header>
+
+        {/* Overlay for mobile when sidebar is open */}
+        {!collapsed && (
+          <div 
+            className="mobile-only"
+            onClick={() => setCollapsed(true)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 90 }} 
+          />
+        )}
 
         {/* Page content */}
         <main style={{ flex: 1, overflowY: 'auto', animation: 'fadeIn 0.3s ease' }}>
