@@ -127,7 +127,8 @@ export default function Navbar() {
                 {currentUser.role === 'admin' && (
                   <DropdownItem onClick={() => { navigate('/admin/overview'); setShowUserMenu(false); }}>⚙️ Admin Panel</DropdownItem>
                 )}
-                <DropdownItem onClick={() => navigate('/wishlist')}>♡ Wishlist</DropdownItem>
+                <DropdownItem onClick={() => { navigate('/wishlist'); setShowUserMenu(false); }}>♡ Wishlist</DropdownItem>
+                <DropdownItem onClick={() => { navigate('/my-orders'); setShowUserMenu(false); }}>📦 My Orders</DropdownItem>
                 <DropdownItem onClick={() => { logout(); setShowUserMenu(false); }} danger>→ Sign Out</DropdownItem>
               </div>
             )}

@@ -8,6 +8,7 @@ import CartDrawer from './features/cart/CartDrawer';
 import StorePage from './pages/store/StorePage';
 import WishlistPage from './pages/store/WishlistPage';
 import CheckoutPage from './pages/store/CheckoutPage';
+import MyOrdersPage from './pages/store/MyOrdersPage';
 import AdminLayout from './pages/admin/AdminLayout';
 import OverviewPage from './pages/admin/OverviewPage';
 import ProductsPage from './pages/admin/ProductsPage';
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/" element={<StoreLayout><StorePage /></StoreLayout>} />
         <Route path="/wishlist" element={<StoreLayout><WishlistPage /></StoreLayout>} />
         <Route path="/checkout" element={<StoreLayout><CheckoutPage /></StoreLayout>} />
+        <Route path="/my-orders" element={<StoreLayout><MyOrdersPage /></StoreLayout>} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
