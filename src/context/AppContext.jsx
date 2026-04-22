@@ -13,10 +13,24 @@ export function AppProvider({ children }) {
   });
   const [toasts, setToasts] = useState([]);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [settings, setSettings] = useState(STORE_SETTINGS);
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('littlelane_settings');
+    return saved ? JSON.parse(saved) : STORE_SETTINGS;
+  });
 
   // Global Simulated Email / Notification State
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState(() => {
+    const saved = localStorage.getItem('littlelane_notifications');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('littlelane_settings', JSON.stringify(settings));
+  }, [settings]);
+
+  useEffect(() => {
+    localStorage.setItem('littlelane_notifications', JSON.stringify(notifications));
+  }, [notifications]);
 
   const addNotification = useCallback((title, message, targetUserId = null, isEmail = true) => {
     const id = Date.now().toString() + Math.random().toString(36).substr(2, 5);

@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer, useEffect } from 'react';
 import { PRODUCTS, ORDERS } from '../data/seed';
 
 const StoreContext = createContext(null);
@@ -68,7 +68,7 @@ function storeReducer(state, action) {
   }
 }
 
-const initialState = {
+const defaultInitialState = {
   products: PRODUCTS,
   cart: [],
   wishlist: [],
@@ -78,8 +78,26 @@ const initialState = {
   discount: 0,
 };
 
+const getInitialState = () => {
+  const saved = localStorage.getItem('littlelane_store_data');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      // Ensure UI state like cartOpen defaults to false on load
+      return { ...parsed, cartOpen: false };
+    } catch (e) {
+      console.error('Failed to parse store data', e);
+    }
+  }
+  return defaultInitialState;
+};
+
 export function StoreProvider({ children }) {
-  const [state, dispatch] = useReducer(storeReducer, initialState);
+  const [state, dispatch] = useReducer(storeReducer, null, getInitialState);
+
+  useEffect(() => {
+    localStorage.setItem('littlelane_store_data', JSON.stringify(state));
+  }, [state]);
 
   const cartTotal = state.cart.reduce((sum, item) => {
     const product = state.products.find(p => p.id === item.productId);
